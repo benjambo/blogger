@@ -53,7 +53,7 @@ app.post('/user', FBAuth, addUserDetails)
 // Get own user details for user
 app.get('/user', FBAuth, getAuthenticatedUser)
 // Get any users details
-app.get('/user/:user', getUserDetails)
+app.get('/user/:handle', getUserDetails)
 // Marking users notifications read
 app.post('/notifications', markNotificationsRead)
 
@@ -67,11 +67,11 @@ exports.createNotificationOnLike = functions
       .doc(`/posts/${snapshot.data().postId}`)
       .get()
       .then((doc) => {
-        if (doc.exists && doc.data().user !== snapshot.data().user) {
+        if (doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             time: new Date().toISOString(),
-            recipient: doc.data().user,
-            sender: snapshot.data().user,
+            recipient: doc.data().userHandle,
+            sender: snapshot.data().userHandle,
             type: 'like',
             read: false,
             postId: doc.id,
@@ -103,11 +103,11 @@ exports.createNotificationOnComment = functions
       .doc(`/posts/${snapshot.data().postId}`)
       .get()
       .then((doc) => {
-        if (doc.exists && doc.data().user !== snapshot.data().user) {
+        if (doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             time: new Date().toISOString(),
-            recipient: doc.data().user,
-            sender: snapshot.data().user,
+            recipient: doc.data().userHandle,
+            sender: snapshot.data().userHandle,
             type: 'comment',
             read: false,
             postId: doc.id,
@@ -130,7 +130,7 @@ exports.onUserImageChange = functions
       const batch = db.batch()
       return db
         .collection('posts')
-        .where('user', '==', change.before.data().user)
+        .where('userHandle', '==', change.before.data().handle)
         .get()
         .then((data) => {
           data.forEach((doc) => {

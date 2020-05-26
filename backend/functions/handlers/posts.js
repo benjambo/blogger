@@ -8,9 +8,9 @@ exports.getAllPosts = (req, res) => {
       let posts = []
       data.forEach((doc) => {
         posts.push({
-          id: doc.id,
+          postId: doc.id,
           body: doc.data().body,
-          user: doc.data().user,
+          userHandle: doc.data().userHandle,
           time: doc.data().time,
           commentCount: doc.data().commentCount,
           likeCount: doc.data().likeCount,
@@ -33,7 +33,7 @@ exports.postOnePost = (req, res) => {
   }
   const newPost = {
     body: req.body.body,
-    user: req.user.user,
+    userHandle: req.user.handle,
     userImage: req.user.imageUrl,
     time: new Date().toISOString(),
     likeCount: 0,
@@ -92,7 +92,7 @@ exports.commentOnPost = (req, res) => {
     body: req.body.body,
     time: new Date().toISOString(),
     postId: req.params.postId,
-    user: req.user.user,
+    userHandle: req.user.handle,
     userImage: req.user.imageUrl,
   }
 
@@ -120,7 +120,7 @@ exports.commentOnPost = (req, res) => {
 exports.likePost = (req, res) => {
   const likeDocument = db
     .collection('likes')
-    .where('user', '==', req.user.user)
+    .where('userHandle', '==', req.user.handle)
     .where('postId', '==', req.params.postId)
     .limit(1)
 
@@ -145,7 +145,7 @@ exports.likePost = (req, res) => {
           .collection('likes')
           .add({
             postId: req.params.postId,
-            user: req.user.user,
+            userHandle: req.user.handle,
           })
           .then(() => {
             postData.likeCount++
@@ -167,7 +167,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
   const likeDocument = db
     .collection('likes')
-    .where('user', '==', req.user.user)
+    .where('userHandle', '==', req.user.handle)
     .where('postId', '==', req.params.postId)
     .limit(1)
 
@@ -217,7 +217,7 @@ exports.deletePost = (req, res) => {
       if (!doc.exists) {
         return res.status(404).json({ error: 'Post not found' })
       }
-      if (doc.data().user !== req.user.user) {
+      if (doc.data().userHandle !== req.user.handle) {
         return res.status(403).json({
           error: `Unauthorized`,
         })

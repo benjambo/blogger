@@ -17,7 +17,7 @@ exports.signup = (req, res) => {
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
-    user: req.body.user,
+    handle: req.body.handle,
   }
 
   const { valid, errors } = validateSignupData(newUser)
@@ -28,11 +28,11 @@ exports.signup = (req, res) => {
 
   // Validate data
   let token, userId
-  db.doc(`/users/${newUser.user}`)
+  db.doc(`/users/${newUser.handle}`)
     .get()
     .then((doc) => {
       if (doc.exists) {
-        return res.status(400).json({ user: 'This user is already taken' })
+        return res.status(400).json({ handle: 'This user is already taken' })
       } else {
         return firebase
           .auth()
@@ -46,13 +46,13 @@ exports.signup = (req, res) => {
     .then((idToken) => {
       token = idToken
       const userCredentials = {
-        user: newUser.user,
+        handle: newUser.handle,
         email: newUser.email,
         time: new Date().toISOString(),
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
         userId,
       }
-      return db.doc(`/users/${newUser.user}`).set(userCredentials)
+      return db.doc(`/users/${newUser.handle}`).set(userCredentials)
     })
     .then(() => {
       return res.status(201).json({ token })
@@ -101,7 +101,7 @@ exports.login = (req, res) => {
 exports.addUserDetails = (req, res) => {
   let userDetails = reduceUserDetails(req.body)
 
-  db.doc(`/users/${req.user.user}`)
+  db.doc(`/users/${req.user.handle}`)
     .update(userDetails)
     .then(() => {
       return res.json({ message: 'Details added successfully' })
@@ -115,14 +115,14 @@ exports.addUserDetails = (req, res) => {
 // Get any users details
 exports.getUserDetails = (req, res) => {
   let userData = {}
-  db.doc(`/users/${req.params.user}`)
+  db.doc(`/users/${req.params.handle}`)
     .get()
     .then((doc) => {
       if (doc.exists) {
         userData.user = doc.data()
         return db
           .collection('posts')
-          .where('user', '==', req.params.user)
+          .where('userHandle', '==', req.params.handle)
           .orderBy('time', 'desc')
           .get()
       } else {
@@ -135,7 +135,7 @@ exports.getUserDetails = (req, res) => {
         userData.posts.push({
           body: doc.data().body,
           time: doc.data().time,
-          user: doc.data().user,
+          userHandle: doc.data().userHandle,
           userImage: doc.data().userImage,
           likeCount: doc.data().likeCount,
           commentCount: doc.data().commentCount,
@@ -153,12 +153,12 @@ exports.getUserDetails = (req, res) => {
 // Get own user details
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {}
-  db.doc(`/users/${req.user.user}`)
+  db.doc(`/users/${req.user.handle}`)
     .get()
     .then((doc) => {
       if (doc.exists) {
         userData.credentials = doc.data()
-        return db.collection('likes').where('user', '==', req.user.user).get()
+        return db.collection('likes').where('user', '==', req.user.handle).get()
       }
     })
     .then((data) => {
@@ -168,7 +168,7 @@ exports.getAuthenticatedUser = (req, res) => {
       })
       return db
         .collection('notifications')
-        .where('recipient', '==', req.user.user)
+        .where('recipient', '==', req.user.handle)
         .orderBy('time', 'desc')
         .limit(10)
         .get()
@@ -241,7 +241,7 @@ exports.uploadImage = (req, res) => {
       })
       .then(() => {
         const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`
-        return db.doc(`/users/${req.user.user}`).update({ imageUrl })
+        return db.doc(`/users/${req.user.handle}`).update({ imageUrl })
       })
       .then(() => {
         return res.json({ message: `Image uploaded successfully` })
