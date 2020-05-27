@@ -9,6 +9,7 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { TextField } from '@material-ui/core'
 
 // Icons
 import EditIcon from '@material-ui/icons/Edit'
@@ -16,7 +17,7 @@ import EditIcon from '@material-ui/icons/Edit'
 // Redux imports
 import { connect } from 'react-redux'
 import { editUserDetails } from '../redux/actions/userActions'
-import { TextField } from '@material-ui/core'
+
 
 const styles = (theme) => ({
   ...theme.spreadIt,
@@ -96,7 +97,6 @@ class EditDetails extends Component {
                 type="text"
                 label="Bio"
                 multiline
-                rows="3"
                 placeholder="A Short Bio About Yourself"
                 className={classes.TextField}
                 value={this.state.bio}

@@ -29,7 +29,7 @@ const styles = {
     marginBottom: 20,
   },
   image: {
-    minWidth: 140,
+    minWidth: 160,
   },
   content: {
     padding: 25,
@@ -58,7 +58,15 @@ class Post extends Component {
     dayjs.extend(relativeTime)
     const {
       classes,
-      post: { body, time, userImage, userHandle, postId, likeCount, commentCount },
+      post: {
+        body,
+        time,
+        userImage,
+        userHandle,
+        postId,
+        likeCount,
+        commentCount,
+      },
       user: {
         authenticated,
         credentials: { handle },
@@ -80,7 +88,9 @@ class Post extends Component {
       </CustomButton>
     )
     const deleteButton =
-      authenticated && userHandle === handle ? <DeletePost postId={postId} /> : null
+      authenticated && userHandle === handle ? (
+        <DeletePost postId={postId} />
+      ) : null
     return (
       <Card className={classes.card}>
         <CardMedia

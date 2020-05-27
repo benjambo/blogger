@@ -31,6 +31,10 @@ export default {
     },
     button: {
       marginTop: '2vh',
+      position: 'relative',
+    },
+    progress: {
+      position: 'absolute',
     },
     customError: {
       color: 'red',

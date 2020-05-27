@@ -2,6 +2,7 @@
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
     'Helvetica Neue', sans-serif !important;
+  word-wrap: break-word;
 }
 
 html,
@@ -23,5 +24,5 @@ a {
 }
 
 .nav-container svg {
-  color: white
+  color: white;
 }

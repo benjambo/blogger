@@ -4,6 +4,7 @@ import {
   UNLIKE_POST,
   LOADING_DATA,
   DELETE_POST,
+  POST_A_POST,
 } from '../types'
 
 const initialState = {
@@ -35,10 +36,17 @@ export default function (state = initialState, action) {
         ...state,
       }
     case DELETE_POST:
-      let indexDelete = state.posts.findIndex((post) => post.postId === action.payload)
+      let indexDelete = state.posts.findIndex(
+        (post) => post.postId === action.payload
+      )
       state.posts.splice(indexDelete, 1)
       return {
         ...state,
+      }
+    case POST_A_POST:
+      return {
+        ...state,
+        posts: [action.payload, ...state.posts],
       }
     default:
       return state
