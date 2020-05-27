@@ -9,10 +9,9 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { TextField, DialogContentText } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
 
 // Icons
-import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
 
