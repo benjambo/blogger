@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import CustomButton from '../utilities/CustomButton'
+import CustomButton from '../../utilities/CustomButton'
 
 // MaterialUi imports
 import Button from '@material-ui/core/Button'
@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close'
 
 // Redux imports
 import { connect } from 'react-redux'
-import { postToBe, clearErrors } from '../redux/actions/dataActions'
+import { postToBe, clearErrors } from '../../redux/actions/dataActions'
 
 const styles = (theme) => ({
   ...theme.spreadIt,
@@ -41,7 +41,7 @@ class PostToBe extends Component {
     errors: {},
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.UI.errors) {
       this.setState({
         errors: nextProps.UI.errors,

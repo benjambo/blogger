@@ -6,6 +6,7 @@ import {
   DELETE_POST,
   POST_A_POST,
   SET_POST,
+  SUBMIT_COMMENT,
 } from '../types'
 
 const initialState = {
@@ -36,10 +37,13 @@ export default function (state = initialState, action) {
     case UNLIKE_POST:
       let index = state.posts.findIndex(
         (post) => post.postId === action.payload.postId
-      )
-      state.posts[index] = action.payload
+      );
+      state.posts[index] = action.payload;
+      if (state.post.postId === action.payload.postId) {
+        state.post = action.payload;
+      }
       return {
-        ...state,
+        ...state
       }
     case DELETE_POST:
       let indexDelete = state.posts.findIndex(
@@ -54,6 +58,14 @@ export default function (state = initialState, action) {
         ...state,
         posts: [action.payload, ...state.posts],
       }
+      case SUBMIT_COMMENT:
+          return {
+              ...state,
+              post: {
+                  ...state.post,
+                  comments: [action.payload, ...state.post.comments]
+              }
+          }
     default:
       return state
   }

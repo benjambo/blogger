@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import CustomButton from '../utilities/CustomButton'
+import CustomButton from '../../utilities/CustomButton'
+import LikeButton from './LikeButton'
+import Comments from './Comments'
+import CommentForm from './CommentForm'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 
 // MaterialUi imports
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -16,17 +18,15 @@ import Typography from '@material-ui/core/Typography'
 // Icons
 import CloseIcon from '@material-ui/icons/Close'
 import UnfoldMore from '@material-ui/icons/UnfoldMore'
+import ChatIcon from '@material-ui/icons/Chat'
 
 // Redux imports
 import { connect } from 'react-redux'
-import { getPost } from '../redux/actions/dataActions'
+import { getPost, clearErrors } from '../../redux/actions/dataActions'
 
 const styles = (theme) => ({
   ...theme.spreadIt,
-  invisibleSeparator: {
-    border: 'none',
-    margin: 4,
-  },
+
   profileImage: {
     maxWidth: 200,
     height: 200,
@@ -48,10 +48,10 @@ const styles = (theme) => ({
     bottom: '10%',
   },
   spinnerDiv: {
-      textAlign: 'center',
-      marginTop: 50,
-      marginBottom: 50
-  }
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 50,
+  },
 })
 
 class PostDialog extends Component {
@@ -66,6 +66,7 @@ class PostDialog extends Component {
 
   handleClose = () => {
     this.setState({ open: false })
+    this.props.clearErrors()
   }
 
   render() {
@@ -79,9 +80,12 @@ class PostDialog extends Component {
         commentCount,
         userImage,
         userHandle,
+        comments,
       },
       UI: { loading },
     } = this.props
+
+    console.log(postId, likeCount, commentCount)
 
     const dialogMarkup = loading ? (
       <div className={classes.spinnerDiv}>
@@ -107,7 +111,16 @@ class PostDialog extends Component {
           </Typography>
           <hr className={classes.invisibleSeparator} />
           <Typography variant="body1">{body}</Typography>
+          <LikeButton postId={postId} />
+          <span>{likeCount} Likes</span>
+          <CustomButton tip="Comments">
+            <ChatIcon color="primary" />
+          </CustomButton>
+          <span>{commentCount} Comments</span>
         </Grid>
+        <hr className={classes.visibleSeparator} />
+        <CommentForm postId={postId} />
+        <Comments comments={comments} />
       </Grid>
     )
 
@@ -143,6 +156,7 @@ class PostDialog extends Component {
 }
 
 PostDialog.propTypes = {
+  clearErrors: PropTypes.func.isRequired,
   getPost: PropTypes.func.isRequired,
   postId: PropTypes.string.isRequired,
   userHandle: PropTypes.string.isRequired,
@@ -157,6 +171,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   getPost,
+  clearErrors,
 }
 
 export default connect(

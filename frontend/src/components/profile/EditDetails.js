@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import CustomButton from '../utilities/CustomButton'
+import CustomButton from '../../utilities/CustomButton'
 
 // MaterialUi imports
 import Button from '@material-ui/core/Button'
@@ -16,7 +16,7 @@ import EditIcon from '@material-ui/icons/Edit'
 
 // Redux imports
 import { connect } from 'react-redux'
-import { editUserDetails } from '../redux/actions/userActions'
+import { editUserDetails } from '../../redux/actions/userActions'
 
 
 const styles = (theme) => ({
